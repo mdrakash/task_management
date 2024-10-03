@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
+use Throwable;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticationController extends Controller
 {
@@ -23,20 +25,31 @@ class AuthenticationController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Create the user
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        DB::beginTransaction();
 
-        // Create accessToken for the user
-        $user->accessToken =  $user->createToken('accessToken')->accessToken;
+        try {
 
-        $data = new UserResource($user);
+            // Create the user
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        // Return a success response
-        return $this->successResponse('User registered successfully.', $data, 201);
+            //Login user after successfully registrationcls
+            Auth::login($user);
+
+            // Create accessToken for the user
+            $user->accessToken =  $user->createToken('accessToken')->accessToken;
+
+            $data = new UserResource($user);
+            DB::commit();
+            // Return a success response
+            return $this->responseWithData('User registered successfully.', $data, 201);
+        } catch (Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     public function login(Request $request)
@@ -47,7 +60,10 @@ class AuthenticationController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
+        DB::beginTransaction();
+        
         try {
+
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 $user = $request->user();
     
@@ -55,14 +71,16 @@ class AuthenticationController extends Controller
                 $user->accessToken =  $user->createToken('accessToken')->accessToken;
     
                 $data = new UserResource($user);
-    
+                
+                DB::commit();
                 // Return a success response
-                return $this->successResponse('User login successfully.', $data, 200);
+                return $this->responseWithData('User login successfully.', $data, 200);
             } else {
                 throw new UnauthorizedException('Unauthorised', 401);
             }
-        } catch (\Exception $th) {
-            return $th->getMessage();
+        } catch (Throwable $th) {
+            DB::commit();
+            throw $th;
         }
     }
 
@@ -72,7 +90,7 @@ class AuthenticationController extends Controller
         $token = $request->user()->token();
         // Revoke the token, logging the user out
         $token->revoke();
-        // Return a success response
-        return $this->successResponse('Logged out successfully.', [], 200);
+        // Return response no content
+        return response()->noContent();
     }
 }
