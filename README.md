@@ -28,19 +28,20 @@ cp .env.example .env
 
 Edit the .env file to configure your environment settings (e.g., database, mail, etc.).
 
-### 3. Generate Application Key
+### 3. Install Composer Dependencies
+Install all the necessary PHP dependencies by running:
+
+```
+composer install
+```
+
+### 4. Generate Application Key
 Generate the application encryption key:
 
 ```
 php artisan key:generate
 ```
 
-### 4. Install Composer Dependencies
-Install all the necessary PHP dependencies by running:
-
-```
-composer install
-```
 
 ### 5. Install NPM Dependencies
 Install all the required Node.js dependencies:
@@ -48,10 +49,23 @@ Install all the required Node.js dependencies:
 ```
 npm install
 ```
-### 6. Run Migrations
+### 6. Run Migrations and Seeder file
 
 ```
-php artisan migrate
+php artisan migrate --seed
+```
+
+### 7. Install Passport Clinet Access Token
+
+```
+php artisan passport:client --personal
+```
+enter any name for client
+
+### 8. Run Local Server
+
+```
+php artisan serve
 ```
 
 ## Built With

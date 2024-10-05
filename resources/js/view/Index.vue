@@ -52,9 +52,9 @@
     const getTasks = async () => {
         try {
             const { data } = await axios.get('api/tasks');
-            ToDoTask.value = data['To Do'];
-            InProgressTask.value = data['In Progress'];
-            DoneTask.value = data['Done'];
+            ToDoTask.value = data['To Do'] || [];
+            InProgressTask.value = data['In Progress'] || [];
+            DoneTask.value = data['Done'] || [];
         } catch (error) {
             console.log(error);
         }
