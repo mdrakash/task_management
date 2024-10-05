@@ -87,6 +87,15 @@ export default function useAuth() {
         loggedIn.value = true;
     }
 
+    const authCheck = async () => {
+        try {
+            const response = await axios.get('/api/me');
+            setUser(response.data.data);
+        } catch (error) {
+            router.push('/login')
+        }
+    }
+
     const setAccessToken = (token) => {
         localStorage.setItem('access_token', token);
     }
@@ -101,5 +110,6 @@ export default function useAuth() {
         user,
         logout,
         loggedIn,
+        authCheck
     }
 }

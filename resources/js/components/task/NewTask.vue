@@ -21,43 +21,70 @@
 
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="new-task">
-                        <form action="#">
+                <form @submit.prevent="createNewTask">
+                    <div class="modal-body">
+                        <div class="new-task">
                             <div class="form-group">
                                 <label for="#">
                                     Assign To
                                 </label>
-                                <select name="assignTo" id="assignTo">
-                                    <option value="0">Select Role</option>
-                                </select>
+                                <VueMultiselect v-model="assignedUsers" :options="users" :multiple="true"
+                                    :close-on-select="true" placeholder="Select users" label="name" track-by="name" />
                             </div>
                             <div class="form-group">
                                 <label for="#">
                                     Task Name
                                 </label>
-                                <input type="text" placeholder="Enter your task name">
+                                <input type="text" v-model="newTaskForm.title" placeholder="Enter your task name">
                             </div>
                             <div class="form-group">
-                                <label for="#">
-                                    Due Date
-                                </label>
-                                <input type="date">
+                                <label for="#">Due Date</label>
+                                <input type="date" v-model="newTaskForm.due_date">
                             </div>
                             <div class="form-group">
-                                <label for="#">
-                                    Describe your answer
-                                </label>
-                                <textarea name="" id="" placeholder="Describe your answer here....."></textarea>
+                                <label for="#">Describe your answer</label>
+                                <textarea v-model="newTaskForm.description"
+                                    placeholder="Describe your answer here....."></textarea>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
-                </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </template>
+
+<script setup>
+    import { ref, reactive } from 'vue';
+    import VueMultiselect from 'vue-multiselect';
+    import 'vue-multiselect/dist/vue-multiselect.css';
+
+    const props = defineProps({
+        users: Array,
+        ToDoTask: Array
+    });
+
+    const assignedUsers = ref([]);
+
+    const newTaskForm = reactive({
+        title: '',
+        status: 'To Do',
+        due_date: '',
+        description: '',
+        assigned_users_ids: []
+    })
+
+    const createNewTask = async () => {
+        try {
+            newTaskForm.assigned_users_ids = assignedUsers.value.map(user => user.id);
+            const { data } = await axios.post('/api/tasks', newTaskForm);
+            props.ToDoTask.push(data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+</script>

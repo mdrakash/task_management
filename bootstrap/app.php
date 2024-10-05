@@ -8,7 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -42,7 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Record Not Found',
                     'status' => Response::HTTP_NOT_FOUND
                 ], Response::HTTP_NOT_FOUND);
-            } elseif($e instanceof UnauthorizedException){
+            } elseif($e instanceof AuthenticationException){
                 return response()->json([
                     'message' => $e->getMessage(),
                     'status' => Response::HTTP_UNAUTHORIZED

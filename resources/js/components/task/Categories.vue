@@ -1,6 +1,6 @@
 <template>
     <div class="ms-todo-items row">
-        <div v-for="(item, key, index) in statuses" :key="index" class="ms-todo-item col-3 d-flex align-items-center justify-content-between rounded"
+        <div v-for="(item, key, index) in taskStatus" :key="index" class="ms-todo-item col-3 d-flex align-items-center justify-content-between rounded"
             data-bs-toggle="modal" data-bs-target="#new-task">
             <p class="m-0 text-uppercase text-dark d-inline-flex gap-2 fw-semibold">{{key}} <span>{{item}}</span></p>
             <p class="add">
@@ -17,11 +17,8 @@
 <script setup>
 import { ref } from 'vue';
 
-const statuses = ref({
-    'To Do': 17,
-    'Work In Progress': 17,
-    'Under Review': 17,
-    'Complete': 17
+const props = defineProps({
+    taskStatus: Object
 });
 
 </script>

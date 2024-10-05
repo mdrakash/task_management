@@ -22,9 +22,16 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::with('assigned_users:id,name')->get();
+        // Query to get tasks created by the user and tasks assigned by the user
+        $userId = Auth::id();
 
-        return TaskResource::collection($tasks);
+        $tasks = Task::with('assigned_users:id,name')->where('created_by', $userId)
+                    ->orWhereHas('assigned_users', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    })
+                    ->get()
+                    ->groupBy('status');
+        return response()->json($tasks,200);
     }
 
     /**

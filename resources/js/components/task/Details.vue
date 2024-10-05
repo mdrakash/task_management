@@ -24,20 +24,14 @@
                 <div class="modal-body p-0">
                     <div class="tas-details">
                         <div class="task-name">
-                            <h4>Task Name</h4>
+                            <h4>{{task.title}}</h4>
                             <p class="d-flex align-items-center gap-3"><img src="/assets/images/date.png" alt="date">
-                                April 12, 2023,
-                                at 9:00 AM</p>
+                                {{moment(task.created_at).format('MMMM D, YYYY, [at] h:mm A')}}
+                            </p>
                         </div>
                         <div class="task-discription">
                             <h4>Description</h4>
-                            <p>The UI/UX design team gathered on [insert date and time] for a collaborative session
-                                aimed at fostering
-                                creativity, addressing project updates, and enhancing team cohesion. The virtual room
-                                echoed with a warm
-                                welcome as team members, familiar faces, and a few guests joined the call. After a quick
-                                round of
-                                introductions, the agenda unfolded.</p>
+                            <p> {{task.description}} </p>
                         </div>
                         <div class="task-member">
                             <h4>Member</h4>
@@ -59,12 +53,7 @@
                         </div>
                         <div class="task-status">
                             <h6>Status</h6>
-                            <select name="status" id="status">
-                                <option value="0">To-Do</option>
-                                <option value="1">Work In Progress</option>
-                                <option value="1">Under Review</option>
-                                <option value="1">Complete</option>
-                            </select>
+                            <p> {{task.status}} </p>
                         </div>
                         <div class="task-write">
                             <h4>Write your comment</h4>
@@ -113,3 +102,12 @@
         </div>
     </div>
 </template>
+
+<script setup>
+import {ref} from 'vue';
+import moment from 'moment';
+
+const props = defineProps({
+    task: Object
+});
+</script>
