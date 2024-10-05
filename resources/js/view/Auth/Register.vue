@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
-import AuthLayout from '@/view/Layouts/AuthLayout.vue';
+import AuthLayout from '@/Layouts/AuthLayout.vue';
     const axios = window.axios;
     const status = ref('');
     const form = reactive({

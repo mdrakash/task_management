@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
-import AuthLayout from '@/view/Layouts/AuthLayout.vue';
+import AuthLayout from '@/Layouts/AuthLayout.vue';
 import useAuth from '@/composable/Auth';
     const {loginForm, submitLogin} = useAuth();
     const status = ref('');
