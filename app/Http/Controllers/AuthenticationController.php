@@ -68,9 +68,9 @@ class AuthenticationController extends Controller
                 $user = $request->user();
     
                 // Create accessToken for the user
-                $user->accessToken =  $user->createToken('accessToken')->accessToken;
+                $data['access_token'] =  $user->createToken('access_token')->accessToken;
     
-                $data = new UserResource($user);
+                $data['user'] = new UserResource($user);
                 
                 DB::commit();
                 // Return a success response

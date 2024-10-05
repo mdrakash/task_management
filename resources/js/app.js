@@ -1,6 +1,11 @@
 import './bootstrap'; 
 // Importing the bootstrap.js file, which typically initializes libraries like Axios, Laravel Echo, etc.
 
+import '@popperjs/core/dist/umd/popper';
+import 'bootstrap';
+import 'bootstrap/dist/js/bootstrap.min.js'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import {createApp} from 'vue'; 
 
 import App from './App.vue'; 
