@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    <TaskDetails :taskDetails/>
+    <!-- <TaskDetails :taskDetails/> -->
 </template>
 
 <script setup>
